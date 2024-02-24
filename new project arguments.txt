@@ -1,0 +1,1 @@
+--strict=false --routing=false --style=css --standalone=false

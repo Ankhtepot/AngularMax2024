@@ -1,0 +1,8 @@
+<button class="btn btn-primary" (click)="onButtonClick()">Display Details</button>
+<p *ngIf="paragraphShown" class="secret-paragraph">Secret Password = tuna</p>
+<div>
+  <p *ngFor="let log of logs; index as i"
+     [ngStyle]="{ 'background-color' : i >= 4 ? 'blue' : 'transparent'}"
+     [class]="{ 'fiveClicksPlus' : i >= 4 }"
+  >Log timestamp: {{ log }}</p>
+</div>

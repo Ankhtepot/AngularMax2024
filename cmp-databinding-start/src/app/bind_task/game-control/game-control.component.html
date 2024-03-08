@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-success" (click)="startGame()" [disabled]="isStopping">Start</button>
+      <button class="btn btn-danger" (click)="stopGame()">Stop</button>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-xs-6">
+      <app-odd *ngFor="let odd of odds" [odd]="odd"></app-odd>
+    </div>
+    <div class="col-xs-6">
+      <app-even *ngFor="let even of evens" [even]="even"></app-even>
+    </div>
+  </div>
+</div>

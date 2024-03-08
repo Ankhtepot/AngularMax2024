@@ -10,7 +10,7 @@ export class GameControlComponent {
   @Output() onGameStopped = new EventEmitter<void>();
   @Output() onGameTick = new EventEmitter<number>();
   count: number = 0;
-  Timer: NodeJS.Timeout = null;
+  Timer = null;
   odds: number[] = [];
   evens: number[] = [];
   isStopping: Boolean = false;

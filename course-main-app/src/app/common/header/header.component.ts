@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {Constants} from "../constants";
 
 @Component({
   selector: 'app-header',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+  @Output() featureSelected = new EventEmitter<string>();
 
+  onRecipesClick() {
+    this.featureSelected.emit(Constants.RECIPES);
+  }
+
+  onShoppingListClick() {
+    this.featureSelected.emit(Constants.SHOPPING_LIST);
+  }
 }

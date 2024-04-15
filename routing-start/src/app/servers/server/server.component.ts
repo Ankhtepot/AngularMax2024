@@ -16,14 +16,17 @@ export class ServerComponent implements OnInit {
               private router : Router) { }
 
   ngOnInit() {
-    const serverId = +this.route.snapshot.params['id'];
-    this.setServer(serverId);
-
-    this.route.params.subscribe(
-      (params) => {
-        this.setServer(+params['id']);
-      }
-    );
+    // const serverId = +this.route.snapshot.params['id'];
+    // this.setServer(serverId);
+    //
+    // this.route.params.subscribe(
+    //   (params) => {
+    //     this.setServer(+params['id']);
+    //   }
+    // );
+    this.route.data.subscribe((data) => {
+      this.server = data['server'];
+    });
   }
 
   private setServer(id: number) {

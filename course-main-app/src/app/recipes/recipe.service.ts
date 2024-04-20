@@ -1,14 +1,13 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Recipe} from "../models/recipe";
 import {Ingredient} from "../models/ingredient";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipeService {
-  recipeSelected = new EventEmitter<Recipe>();
-
-  private recipes : Recipe[] = [
+  private recipes: Recipe[] = [
     new Recipe('Tasty Schnitzel', 'A super-tasty Schnitzel - just awesome!', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
       [
         new Ingredient('Meat', 1),
@@ -23,7 +22,8 @@ export class RecipeService {
       []),
   ];
 
-  constructor() { }
+  constructor() {
+  }
 
   getRecipes() {
     return this.recipes.slice();

@@ -1,11 +1,12 @@
-import {EventEmitter, Injectable, Output} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Ingredient} from "../models/ingredient";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListService {
-  @Output() ingredientsChanged = new EventEmitter<Ingredient[]>();
+  ingredientsChanged : Subject<Ingredient[]> = new Subject<Ingredient[]>();
 
   private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
@@ -20,12 +21,12 @@ export class ShoppingListService {
 
   addIngredient(addedIngredient: Ingredient) {
     this.mergeIngredients([addedIngredient])
-    this.ingredientsChanged.emit(this.ingredients.slice());
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
 
   addIngredients(addedIngredients: Ingredient[]) {
     this.mergeIngredients(addedIngredients)
-    this.ingredientsChanged.emit(this.ingredients.slice());
+    this.ingredientsChanged.next(this.ingredients.slice());
   }
 
   // Adds new ingredients if not in the list, add the amount if it is in the list

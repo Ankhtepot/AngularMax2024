@@ -1,10 +1,17 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-<!--      <form (ngSubmit)="onSubmit(f)" #f="ngForm">-->
+      <!--      <form (ngSubmit)="onSubmit(f)" #f="ngForm">-->
       <form (ngSubmit)="onSubmit()" #f="ngForm">
-        <div id="user-data">
-          <div class="form-group" style="margin-top: 3px">
+        <div
+          id="user-data"
+          ngModelGroup="userData"
+          #userData="ngModelGroup"
+        >
+          <div
+            class="form-group"
+            style="margin-top: 3px"
+          >
             <label for="username">Username</label>
             <input
               type="text"
@@ -12,6 +19,7 @@
               class="form-control"
               ngModel
               name="username"
+              required
             >
           </div>
           <button class="btn btn-default" type="button" style="margin-top: 3px">Suggest an Username</button>
@@ -23,22 +31,41 @@
               class="form-control"
               ngModel
               name="email"
+              required
+              email
+              #email="ngModel"
             >
+            <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email!</span>
           </div>
         </div>
-        <div class="form-group">
+        <p *ngIf="!userData.valid && userData.touched">User data is invalid!</p>
+        <div class="form-group" ngModelGroup="questionData">
           <label for="secret">Secret Questions</label>
           <select
             id="secret"
             class="form-control"
-            ngModel
+            [ngModel]="defaultQuestion"
             name="secret"
           >
             <option value="pet">Your first Pet?</option>
             <option value="teacher">Your first teacher?</option>
           </select>
+          <div class="form-group">
+          <textarea
+            name="questionAnswer"
+            rows="3"
+            [(ngModel)]="answer"
+            class="form-control"
+          ></textarea>
+          </div>
+          <p>Your reply: {{ answer }}</p>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!f.valid"
+        >Submit
+        </button>
       </form>
     </div>
   </div>

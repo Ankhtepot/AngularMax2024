@@ -9,7 +9,7 @@ import {NgForm} from "@angular/forms";
   templateUrl: './shopping-list-edit.component.html',
   styleUrl: './shopping-list-edit.component.css'
 })
-export class ShoppingListEditComponent implements OnInit, OnDestroy{
+export class ShoppingListEditComponent implements OnInit, OnDestroy {
   @ViewChild('f') form: NgForm;
   ingredientSelected: Subscription;
   editMode = false;
@@ -36,8 +36,8 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy{
     this.ingredientSelected.unsubscribe();
   }
 
-  onAddItem(form: NgForm) {
-    const value = form.value;
+  onSubmit() {
+    const value = this.form.value;
     const newIngredient = new Ingredient(value.name, value.amount);
 
     if (this.editMode) {
@@ -45,7 +45,18 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy{
     } else {
       this.shoppingListService.addIngredient(newIngredient);
     }
+
+    this.onClear();
   }
 
 
+  onClear() {
+    this.form.reset();
+    this.editMode = false;
+  }
+
+  onDelete() {
+    this.shoppingListService.deleteIngredient(this.editedIemIndex);
+    this.onClear();
+  }
 }

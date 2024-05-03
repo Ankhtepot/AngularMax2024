@@ -6,21 +6,22 @@ import {Subject} from "rxjs";
   providedIn: 'root'
 })
 export class ShoppingListService {
-  ingredientsChanged : Subject<Ingredient[]> = new Subject<Ingredient[]>();
-  startedEditing : Subject<number> = new Subject<number>();
+  ingredientsChanged: Subject<Ingredient[]> = new Subject<Ingredient[]>();
+  startedEditing: Subject<number> = new Subject<number>();
 
   private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
     new Ingredient('Tomatoes', 10),
   ]
 
-  constructor() { }
+  constructor() {
+  }
 
-  getIngredients() : Ingredient[] {
+  getIngredients(): Ingredient[] {
     return this.ingredients.slice();
   }
 
-  getIngredient(index: number) : Ingredient {
+  getIngredient(index: number): Ingredient {
     return this.ingredients[index];
   }
 
@@ -35,7 +36,28 @@ export class ShoppingListService {
   }
 
   updateIngredient(index: number, updatedIngredient: Ingredient) {
-    this.ingredients[index] = updatedIngredient;
+    if (index < 0 || index >= this.ingredients.length) {
+      console.log('Invalid index for Ingredient update');
+    }
+
+    const duplicateIndex = this.ingredients.findIndex(i => i.name === updatedIngredient.name);
+
+    if (duplicateIndex !== -1) {
+      this.ingredients[duplicateIndex].amount += updatedIngredient.amount;
+      this.ingredients.splice(index, 1);
+    } else {
+      this.ingredients[index] = updatedIngredient;
+    }
+
+    this.ingredientsChanged.next(this.ingredients.slice());
+  }
+
+  deleteIngredient(index: number) {
+    if (index < 0 || index >= this.ingredients.length) {
+      console.log('Invalid index for Ingredient deletion');
+    }
+
+    this.ingredients.splice(index, 1);
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 

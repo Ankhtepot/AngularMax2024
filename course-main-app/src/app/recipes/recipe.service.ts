@@ -7,7 +7,10 @@ import {Subject} from "rxjs";
   providedIn: 'root'
 })
 export class RecipeService {
-  private recipes: Recipe[] = [
+  recipesChanged = new Subject<Recipe[]>();
+  recipeDeleted = new Subject<number>();
+
+  private recipesSource: Recipe[] = [
     new Recipe('Tasty Schnitzel', 'A super-tasty Schnitzel - just awesome!', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
       [
         new Ingredient('Meat', 1),
@@ -22,18 +25,35 @@ export class RecipeService {
       []),
   ];
 
+  get recipes(): Recipe[] {
+    return this.recipesSource.slice();
+  }
+
+
   constructor() {
   }
 
   getRecipes() {
-    return this.recipes.slice();
+    return this.recipes;
   }
 
   getRecipe(index: number) {
-    return this.recipes[index];
+    return this.recipesSource[index];
   }
 
-  getRecipeIndex(recipe: Recipe) {
-    return this.recipes.indexOf(recipe);
+  addRecipe(recipe: Recipe) {
+    this.recipesSource.push(recipe);
+    this.recipesChanged.next(this.recipes)
+  }
+
+  updateRecipe(index: number, mewRecipe: Recipe) {
+    this.recipesSource[index] = mewRecipe;
+    this.recipesChanged.next(this.recipes)
+  }
+
+  deleteRecipe(id: number) {
+    this.recipesSource.splice(id, 1);
+    this.recipesChanged.next(this.recipes);
+    this.recipeDeleted.next(id);
   }
 }

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../environments/environment";
 import {Post} from "./models/Post";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
-import {catchError, map} from "rxjs/operators";
+import {HttpClient, HttpEventType, HttpHeaders, HttpParams} from "@angular/common/http";
+import {catchError, map, tap} from "rxjs/operators";
 import {Subject, throwError} from "rxjs";
 
 @Injectable({
@@ -10,12 +10,18 @@ import {Subject, throwError} from "rxjs";
 })
 export class PostsService {
   error = new Subject<string>();
+  postsUpdated = new Subject();
 
   constructor(private http: HttpClient) {
   }
 
   createAndStorePost(postData: Post) {
-    return this.http.post<{ name: string }>(environment.postsUrl, postData)
+    return this.http.post<{ name: string }>(
+      environment.postsUrl,
+      postData,
+      {
+        observe: 'response'
+      })
       .subscribe(responseData => {
         console.log(responseData);
       }, error => {
@@ -55,6 +61,31 @@ export class PostsService {
   }
 
   deletePosts() {
-    return this.http.delete(environment.postsUrl);
+    return this.http.delete(
+      environment.postsUrl,
+      {
+        observe: 'events',
+        responseType: 'text'
+      }
+    ).pipe(tap(event => {
+      console.log(event);
+      if (event.type === HttpEventType.Sent) {
+        // ...
+      }
+      if (event.type === HttpEventType.Response) {
+        console.log('All posts deleted');
+      }
+    }));
+  }
+
+  seedPosts(seedPosts: Post[]) {
+    const promises = seedPosts.map(post => this.createAndStorePost(post));
+
+    // Return a single promise that resolves when all post creation promises are resolved
+    Promise.all(promises).then(() => {
+      this.postsUpdated.next();
+    }, error => {
+      return error;
+    });
   }
 }

@@ -47,6 +47,14 @@
       >
         Clear Posts
       </button>
+      |
+      <button
+        class="btn"
+        *ngIf="loadedPosts.length < 1"
+        (click)="onSeedPosts()"
+      >
+        Seed Posts
+      </button>
     </div>
   </div>
   <div class="row">

@@ -13,6 +13,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isFetching = false;
   error = null;
   private errorSubscription: Subscription;
+  private postsUpdatedSubscription: Subscription;
 
   constructor(
     private postsService: PostsService,
@@ -23,11 +24,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.errorSubscription = this.postsService.error.subscribe(errorMessage => {
       this.error = errorMessage;
     });
+    this.postsUpdatedSubscription = this.postsService.postsUpdated.subscribe(() => {
+      this.onFetchPosts();
+    });
     this.onFetchPosts();
   }
 
   ngOnDestroy(): void {
     this.errorSubscription.unsubscribe();
+    this.postsUpdatedSubscription.unsubscribe();
   }
 
   onCreatePost(postData: Post) {
@@ -59,5 +64,22 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onErrorDismissed() {
     this.error = null;
+  }
+
+  async onSeedPosts() {
+    this.postsService.seedPosts([
+      {
+        title: 'Post 1',
+        content: 'This is post 1'
+      },
+      {
+        title: 'Post 2',
+        content: 'This is post 2'
+      },
+      {
+        title: 'Post 3',
+        content: 'This is post 3'
+      },
+    ])
   }
 }
